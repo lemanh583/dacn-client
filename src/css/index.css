@@ -1,0 +1,31 @@
+* {
+    font-family: "Roboto",sans-serif;
+    padding: 0;
+    margin: 0;
+}
+.auto-margin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.flx {
+    display: flex;
+}
+.flx-end{
+    display: flex;
+    justify-content: flex-end;
+}
+.alg-center {
+    align-items: center;
+}
+.jtc-start {
+    justify-content: flex-start
+}
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: #ebebeb;
+}
+.full-width  {
+    width: 100%;
+}
