@@ -11,6 +11,7 @@
     "@ckeditor/ckeditor5-build-classic": "^31.1.0",
     "@ckeditor/ckeditor5-upload": "^31.1.0",
     "@ckeditor/ckeditor5-vue": "^2.0.1",
+    "@kyvg/vue3-notification": "^2.3.4",
     "@popperjs/core": "^2.11.0",
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",

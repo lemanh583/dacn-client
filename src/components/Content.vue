@@ -5,7 +5,7 @@
         <router-link to="/"> 
         <img
           class="image-content"
-          src="https://lh3.googleusercontent.com/proxy/DprNZ8aleYF0IhTpckfheqRQ-dqvKUlfwU1ZXGPuE6atbiLjudVXb13H7dpR277C4TFGh1wo5nosunfOhLiPwJ4BTZqR-TWE7VCa5JfmBU-Q"
+          src="https://maytinhvui.com/wp-content/uploads/2020/11/hinh-nen-may-tinh-4k-game-min.jpg"
           alt=""
         />
         </router-link>
@@ -44,8 +44,8 @@
   text-overflow: ellipsis;
 }
 .image-content {
-  width: 100%;
-  /* height: auto; */
+  max-width: 100%;
+  max-height: 120px;
 }
 .title {
   font-size: 16px;

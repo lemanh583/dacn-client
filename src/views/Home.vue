@@ -1,6 +1,9 @@
 <template>
   <div>
     <Header />
+    {{this.$store.state.isAuth}}
+    {{this.$store.state.isRole}}
+    {{this.$store.state.nameUser}}
     <div class="container" style="">
       <div class="row">
         <div class="col-8">
@@ -48,27 +51,31 @@
         </div>
       </div>
     </div>
-    <Footer />
+    <!-- </LayoutPage> -->
   </div>
 </template>
 <script>
-import Header from "../components/Header.vue";
 import Content from "../components/Content.vue";
-import Footer from "../components/Footer.vue";
 import ContentBig from "../components/contentBig.vue";
 import ContentSmall from "../components/contentSmall.vue";
+import Header from "../components/Header.vue";
+import { checkToken } from "../module/index.js"
+import { useStore } from "vuex"
 import {ref} from "vue"
 import axios from "axios"
+
+
+
 export default {
   components: {
-    Header,
     Content,
-    Footer,
     ContentBig,
     ContentSmall,
+    Header
   },
   setup() {
     const post = ref([])
+    const store = useStore()
     const fechPost = async () => {
       try {
         const response = await axios.get(`${process.env.VUE_APP_URL}/post/list`)
@@ -78,7 +85,23 @@ export default {
         console.error(error);
       }
     }
+
+    checkToken().then((result) => {
+      if(result){
+        console.log('result', result)
+          store.commit('setAuth', true)
+          store.commit('setRole', result.data.role)
+          store.commit('setName', result.data.name)
+        } 
+    })
+
+
+
     fechPost()
+
+
+
+
     return {
       post
     }

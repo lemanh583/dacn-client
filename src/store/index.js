@@ -6,16 +6,19 @@ import Vuex from 'vuex'
 const store = new Vuex.Store({
   state: {
     isAuth: false,
-    isRole: Number
+    isRole: Number,
+    nameUser: ""
   },
   mutations: {
     setAuth(state, value) {
-      console.log('value', value)
       state.isAuth = value
     },
     setRole(state, value) {
       state.isRole = value
-    }
+    },
+    setName(state, value) {
+      state.nameUser = value
+    },
   }
 })
 

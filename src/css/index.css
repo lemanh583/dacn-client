@@ -29,3 +29,32 @@
 .full-width  {
     width: 100%;
 }
+.table-content {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px 5px rgb(0 0 0 / 10%);
+    margin-bottom: 100px;
+  }
+
+  .ck-editor__editable {
+    min-height: 500px;
+}
+
+/* Cài đặt thông báo  */
+
+.vue-notification {
+    /* // styling */
+    margin: 20px 5px 5px;
+    top: 20px;
+    padding: 20px;
+    font-size: 18px !important;
+    color: #ffffff;
+    height: 55px;
+  
+    /* // default (blue) */
+    background: #44a4fc;
+    border-left: 5px solid #187fe7;
+  
+    /* // types (green, amber, red) */
+  }

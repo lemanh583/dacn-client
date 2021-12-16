@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header />
+        <Header :slug="categoryActive" />
         <div class="container">
             <div class="row">
                 <div class="col-8">
@@ -31,10 +31,12 @@ export default {
             // title: "",
             // content: "",
         })
+        const categoryActive = ref("") 
         const fetchPost = async () => {
             try {
                  let response = await axios.get(`${process.env.VUE_APP_URL}/post/get/${params}`)
                  post.value = response.data.data
+                 categoryActive.value = response.data.data.category.slug
                  console.log('post', post.value)
             } catch (error) {
                 console.error(error);                
@@ -43,7 +45,8 @@ export default {
         fetchPost()
         console.log('route', router.params.slug)
         return {
-            post
+            post,
+            categoryActive
         }
     },
 }

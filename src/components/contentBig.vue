@@ -3,7 +3,7 @@
         <div :class="['row', 'content-big', flag ? 'hei-500' : '']">
             <div class="col-12">
               <div class="image">
-                 <img src="https://lh3.googleusercontent.com/proxy/DprNZ8aleYF0IhTpckfheqRQ-dqvKUlfwU1ZXGPuE6atbiLjudVXb13H7dpR277C4TFGh1wo5nosunfOhLiPwJ4BTZqR-TWE7VCa5JfmBU-Q" alt="">
+                 <img src="https://maytinhvui.com/wp-content/uploads/2020/11/hinh-nen-may-tinh-4k-game-min.jpg" alt="">
               </div>
               <div class="title">
                 <router-link :to="`/${post.slug}`"> 
@@ -51,8 +51,8 @@ export default {
   height: 500px;
 }
 .image img {
-  width: 100%;
-  height: auto;
+  max-width: 100%;
+  max-height: 400px;
 }
 .title {
   margin-top: 20px;

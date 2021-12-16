@@ -64,6 +64,9 @@ export default {
         // console.log("response", response.data);
         if(response.data.success) {
           localStorage.setItem('token', response.data.token)
+          store.commit('setAuth', true)
+          store.commit('setRole', response.data.role)
+          store.commit('setName', response.data.name)
           router.push({ path: '/' })
         }
       } catch (error) {
@@ -85,6 +88,7 @@ export default {
           router.push({ path: '/' })
           store.commit('setAuth', true)
           store.commit('setRole', result.data.role)
+          store.commit('setName', result.data.name)
         } 
     } )
   

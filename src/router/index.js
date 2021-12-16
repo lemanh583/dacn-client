@@ -4,7 +4,7 @@ import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 import Details from "../views/Details.vue"
 import Error from "../views/Error.vue"
-// import store from "../store"
+import store from "../store"
 
 const routes = [
   {
@@ -20,10 +20,7 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import('../views/About.vue'),
     // meta: {requireAuth: true}
   },
   {
@@ -37,6 +34,21 @@ const routes = [
     component: Register
   },
   {
+    path: '/admin/:url',
+    name: 'Admin',
+    component: () => import('../views/Admin.vue'),
+  },
+  {
+    path: '/update-user/:id',
+    name: 'UpdateUser',
+    component: () => import('../views/Admin.vue'),
+  },
+  {
+    path: '/update-post/:id',
+    name: 'UpdatePost',
+    component: () => import('../views/Admin.vue'),
+  },
+  {
     path: '/:match(.*)*',
     component: Error
   }
@@ -47,16 +59,28 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => { 
-//   if(to.path == "/about") {
-//     if(store.state.isAuth && store.state.isRole === 0 || store.state.isRole === 1){
-//       return next()
-//     }
-//     else {
-//       next({path: "/"})
-//     }
-//   }
-//   next()
-// })
+router.beforeEach((to, from, next) => { 
+  // console.log('to', to)
+  // console.log('to.path ', to.path.match == "/admin/:url")
+  // console.log('store', store.state.isAuth)
+  if(to.name == "Admin" ) {
+    if(store.state.isAuth && store.state.isRole === 0 || store.state.isRole === 1){
+      return next()
+    }
+    else {
+      next({path: "/"})
+    }
+  }
+  
+  if(to.name == "UpdatePost" || to.name == "UpdateUser") {
+    if(store.state.isAuth) {
+      return next()
+    }else {
+      next({path: "/"})
+    }
+  }
+
+  next()
+})
 
 export default router

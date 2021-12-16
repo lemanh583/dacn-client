@@ -28,27 +28,51 @@
               </form>
             </div>
             <div>
-              <button class="btn btn-success" style="margin-right: 10px">
-                Đăng nhập
-              </button>
-              <button class="btn btn-success">Đăng ký</button>
+              {{ this.$store.state.nameUser }}
+              <span v-if="!isAuth">
+                <router-link to="/login">
+                  <button class="btn btn-success" style="margin-right: 10px">
+                    Đăng nhập
+                  </button>
+                </router-link>
+                <router-link to="/register">
+                  <button class="btn btn-success">Đăng ký</button>
+                </router-link>
+              </span>
+            
+              <a v-else @click="handleLogout">
+                Đăng xuất
+              </a>
+                 <router-link to="/admin/dashboard">Admin</router-link>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div :class="['nav-bar', fixed ? 'fixed' : '']">
+    <div :class="['nav-bar-header', fixed ? 'fixed' : '']">
       <div class="container">
         <div class="flx jtc-start">
           <ul class="flx">
             <router-link to="/">
-                <li @click="handleActive" :class="[params == undefined ? 'active': '' ]" :style="fixed ? 'padding: 15px' : ''">
-                  <strong> Home </strong>
-                </li>
-              </router-link>
+              <li
+                @click="handleActive"
+                :class="[params == undefined ? 'active' : '']"
+                :style="fixed ? 'padding: 15px' : ''"
+              >
+                <strong> Home </strong>
+              </li>
+            </router-link>
             <span v-for="category in listCategory" :key="category._id">
               <router-link :to="`/${category.slug}`">
-                <li @click="handleActive" :class="[params == category.slug ? 'active': '' ]" :style="fixed ? 'padding: 15px' : ''">
+                <li
+                  @click="handleActive"
+                  :class="[
+                    params == category.slug || slug == category.slug
+                      ? 'active'
+                      : '',
+                  ]"
+                  :style="fixed ? 'padding: 15px' : ''"
+                >
                   <strong> {{ category.name }} </strong>
                 </li>
               </router-link>
@@ -60,17 +84,20 @@
   </div>
 </template>
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "axios";
-import {useRoute} from "vue-router"
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 export default {
-  setup() {
+  props: ["slug"],
+  setup(props) {
     const fixed = ref(false);
     const listCategory = ref([]);
     // const menu = ref([])
-    const router = useRoute()
-    const params = ref(router.params.slug)
-
+    const router = useRoute();
+    const params = ref(router.params.slug);
+    const store = useStore();
+    const isAuth = computed(()=> store.state.isAuth)
     const fetchCategory = async () => {
       try {
         const list = await axios.get(
@@ -78,12 +105,8 @@ export default {
         );
         if (list.data.success) {
           listCategory.value = list.data.data;
-          // listCategory.value.forEach(val => {
-          //   menu.value.push( {key: val.slug, active: false} )
-          // })
         }
         console.log("list", list);
-        // console.log("menu", menu.value);
       } catch (error) {
         console.error(error);
       }
@@ -91,28 +114,21 @@ export default {
 
     const handleActive = () => {
       setTimeout(() => {
-         params.value = router.params.slug
-          console.log('router.params.slug', router.params.slug)
-      }, 100)
-     
-      // console.log('router.params.slug', router.params.slug)
-    }
+        params.value = router.params.slug;
+        console.log("router.params.slug", router.params.slug);
+      }, 100);
+    };
 
-    // const checkActive = () => {
-    //   menu.value.forEach( value => {
-    //     if(value.key == params) {
-    //       value.active = true
-    //       console.log()
-    //     }
-    //   })
-    // }
+    const handleLogout = () => {
+      localStorage.setItem("token", "");
+      store.commit("setAuth", false);
+      store.commit("setRole", Number);
+      store.commit("setName", "");
+    };
 
-    fetchCategory();
-    // checkActive();
-    console.log('params', params.value)
     onMounted(() => {
       window.document.onscroll = () => {
-        let nav = document.querySelector(".nav-bar");
+        let nav = document.querySelector(".nav-bar-header");
         if (window.scrollY > nav.offsetTop) {
           fixed.value = true;
         } else {
@@ -121,11 +137,19 @@ export default {
         }
       };
     });
+
+    // call function
+
+    fetchCategory();
+
     return {
       fixed,
       listCategory,
       handleActive,
-      params
+      params,
+      handleLogout,
+      isAuth,
+      props,
     };
   },
 };
@@ -185,7 +209,7 @@ ul li {
   box-shadow: 0 -5px white;
   color: #ee002d;
 }
-.nav-bar {
+.nav-bar-header {
   box-shadow: 0px 0px 36px 0px rgb(0 0 0 / 10%);
   background-color: white;
 }
