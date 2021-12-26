@@ -41,12 +41,21 @@ const routes = [
   {
     path: '/update-user/:id',
     name: 'UpdateUser',
-    component: () => import('../views/Admin.vue'),
+    component: () => import('../views/UpdateUser.vue'),
   },
   {
     path: '/update-post/:id',
     name: 'UpdatePost',
-    component: () => import('../views/Admin.vue'),
+    component: () => import('../views/updatePost.vue'),
+  },
+  {
+    path: '/create-post',
+    name: 'CreatePost',
+    component: () => import('../views/updatePost.vue'),
+  },
+  {
+    path: '/404',
+    component: Error
   },
   {
     path: '/:match(.*)*',
@@ -72,14 +81,21 @@ router.beforeEach((to, from, next) => {
     }
   }
   
-  if(to.name == "UpdatePost" || to.name == "UpdateUser") {
-    if(store.state.isAuth) {
+  if(to.name == "UpdatePost" ||  to.name == "CreatePost") {
+    if(store.state.isAuth && [0,1,2].indexOf(store.state.isRole) >= 0) {
       return next()
     }else {
       next({path: "/"})
     }
   }
 
+  if(to.name == "UpdateUser") {
+    if(store.state.isAuth) {
+      return next()
+    }else {
+      next({path: "/"})
+    }
+  }
   next()
 })
 

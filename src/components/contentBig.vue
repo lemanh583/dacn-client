@@ -3,7 +3,7 @@
         <div :class="['row', 'content-big', flag ? 'hei-500' : '']">
             <div class="col-12">
               <div class="image">
-                 <img src="https://maytinhvui.com/wp-content/uploads/2020/11/hinh-nen-may-tinh-4k-game-min.jpg" alt="">
+                 <img :src="post.image.src" alt="">
               </div>
               <div class="title">
                 <router-link :to="`/${post.slug}`"> 
@@ -17,18 +17,18 @@
 <script>
 // import {toRefs} from "vue"
 export default {
-  props: {
-    flag: {
-      type: Boolean
-    },
-    post: {
-      type: Object,
-      default: () => ({
-        // slug: "",
-        // title: ""
-      })
-    }
-  },
+  props: ["flag", "post"],
+  //   flag: {
+  //     type: Boolean
+  //   },
+  //   post: {
+  //     type: Object,
+  //     default: () => ({
+  //       // slug: "",
+  //       // title: ""
+  //     })
+  //   }
+  // },
   setup(props) {
     // const refPost = toRefs(props).post
     // console.log('post.props',props.post)
@@ -51,8 +51,11 @@ export default {
   height: 500px;
 }
 .image img {
+  width: 100%;
   max-width: 100%;
   max-height: 400px;
+  object-fit: cover;
+  object-position: top;
 }
 .title {
   margin-top: 20px;

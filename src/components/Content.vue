@@ -2,27 +2,23 @@
   <div>
     <div class="row block-content">
       <div class="col-4">
-        <router-link to="/"> 
+        <router-link :to="`/${post.slug}`"> 
         <img
           class="image-content"
-          src="https://maytinhvui.com/wp-content/uploads/2020/11/hinh-nen-may-tinh-4k-game-min.jpg"
+          :src="post.image.src"
           alt=""
         />
         </router-link>
       </div>
       <div class="col-8 ">
         <div class="content">
-          <router-link to="/"> 
+          <router-link :to="`/${post.slug}`"> 
             <h3 class="title">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quia,
-              corporis illo blanditiis nostrum itaque tenetur deleniti quidem
-              
+              {{post.title}}
             </h3>
           </router-link>
           <p class="descriptions">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit
-            magnam ea molesti sdvsdvsdvsdv m ea molesti sdvsdvsdvsdv m ea molesti sdvsdvsdvsdv
-            sdvdsvdsvsdvsdvsdvsdvknjgf m ea molesti sdvsdvsdvsdv
+             {{post.descriptions}}
           </p>
         </div>
       </div> 
@@ -34,6 +30,18 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: ["post"],
+  setup(props) {
+    return {
+        props
+    }
+  },
+}
+</script>
+
 <style scoped>
 .block-content {
   padding: 20px 0;
@@ -46,6 +54,9 @@
 .image-content {
   max-width: 100%;
   max-height: 120px;
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 .title {
   font-size: 16px;

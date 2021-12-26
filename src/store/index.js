@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     isAuth: false,
     isRole: Number,
-    nameUser: ""
+    nameUser: "",
+    id: ""
   },
   mutations: {
     setAuth(state, value) {
@@ -19,6 +20,9 @@ const store = new Vuex.Store({
     setName(state, value) {
       state.nameUser = value
     },
+    setId(state, value) {
+      state.id = value
+    }
   }
 })
 

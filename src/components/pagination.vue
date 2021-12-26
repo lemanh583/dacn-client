@@ -3,18 +3,18 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
+          <span class="page-link" href="" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
-          </a>
+          </span>
         </li>
-        <li v-for="i in page" :key="i" class="page-item"><a class="page-link" href="#">{{i}}</a></li>
+        <li v-for="i in page" :key="i" @click="handleChange(i)" class="page-item"><span class="page-link">{{i}}</span></li>
       
         <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
+          <span class="page-link" href="" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>
-          </a>
+          </span>
         </li>
       </ul>
     </nav>
@@ -24,14 +24,23 @@
 import {ref, watch} from "vue"
 export default {
     props: ["count", "size"],
-    setup(props) {
-        const page = ref(1)
+    setup(props, context) {
+        const page = ref(0)
         watch(() => props.count ,(cur) => {
-          page.value = Math.floor (cur / props.size)
+          if(cur % props.size == 0) {
+             page.value = Math.floor (cur / props.size)
+          }
+          else {
+            page.value = Math.floor(cur / props.size) + 1
+          }
         })
         console.log('page', page.value)
+        const handleChange = (pageNumber) => {
+          context.emit('changePaginator', pageNumber)
+        }
         return {
-            page
+            page,
+            handleChange
         }
     },
 }

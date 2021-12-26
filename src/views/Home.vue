@@ -1,52 +1,40 @@
 <template>
   <div>
     <Header />
-    {{this.$store.state.isAuth}}
-    {{this.$store.state.isRole}}
-    {{this.$store.state.nameUser}}
+    {{ this.$store.state.isAuth }}
+    {{ this.$store.state.isRole }}
+    {{ this.$store.state.nameUser }}
+    {{ this.$store.state.id }}
     <div class="container" style="">
       <div class="row">
         <div class="col-8">
-          <ContentBig :post="post[0]" :flag="true" />
+          <ContentBig :post="bigPost[0]" :flag="true" />
         </div>
         <div class="col-4">
-          <ContentBig :post="post[0]" :flag="false" />
+          <ContentBig :post="bigPost[1]" :flag="false" />
+          <Content :post="bigPost[1]" />
         </div>
       </div>
       <div class="row" style="">
         <div class="col-8" style="">
-          <div class="category">
-            <h3>Thời sự</h3>
+          <div v-for="(value, key) in listPost" :key="key">
+            <div :class="['category', key != 'Thời sự' ? 'mar-50' : '']">
+              <h3>{{ key }}</h3> 
+            </div>
+            <Content v-for="post in value" :key="post._id" :post="post" />
           </div>
-          <Content />
-          <Content />
-          <Content />
-          <Content />
-          <div class="category mar-50">
-            <h3>Thời sự</h3>
-          </div>
-          <Content />
-          <Content />
-          <Content />
-          <Content />
-          <div class="category mar-50">
-            <h3>Thời sự</h3>
-          </div>
-          <Content />
-          <Content />
-          <Content />
-          <Content />
+
         </div>
         <div class="col-4">
           <div class="category">
             <h3>Thời sự</h3>
           </div>
-          <ContentBig :post="post[0]" :flag="false" />
-          <ContentSmall />
+          <!-- <ContentBig :post="post[0]" :flag="false" /> -->
+          <!-- <ContentSmall /> -->
           <div class="category mar-50">
             <h3>Thời sự</h3>
           </div>
-          <ContentSmall />
+          <!-- <ContentSmall /> -->
           Đang được quan tâm Tin mới nhất Random tin
         </div>
       </div>
@@ -57,54 +45,77 @@
 <script>
 import Content from "../components/Content.vue";
 import ContentBig from "../components/contentBig.vue";
-import ContentSmall from "../components/contentSmall.vue";
+// import ContentSmall from "../components/contentSmall.vue";
 import Header from "../components/Header.vue";
-import { checkToken } from "../module/index.js"
-import { useStore } from "vuex"
-import {ref} from "vue"
-import axios from "axios"
-
-
+import { checkToken } from "../module/index.js";
+import { useStore } from "vuex";
+import { ref } from "vue";
+import axios from "axios";
 
 export default {
   components: {
     Content,
     ContentBig,
-    ContentSmall,
-    Header
+    // ContentSmall,
+    Header,
   },
   setup() {
-    const post = ref([])
-    const store = useStore()
+    const post = ref([]);
+    const store = useStore();
+    const listPost = ref({});
+    const bigPost = ref([])
+
     const fechPost = async () => {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_URL}/post/list`)
-        post.value = response.data.data
-        console.log('post', response.data)
+        const list = await axios.get( `${process.env.VUE_APP_URL}/category/list`);
+        if (list.data.success) {
+          await Promise.all(
+            list.data.data.map(async (cate) => {
+              let response = await axios.post(`${process.env.VUE_APP_URL}/post/list?limit=3`,
+                {
+                  filter: {
+                    category: cate._id,
+                    approved: 1
+                  },
+                }
+              );
+              if (response.data.success) {
+                listPost.value[cate.name] = response.data.data;
+              }
+            })
+          );
+        }
+
+        const resbigPost = await axios.post(`${process.env.VUE_APP_URL}/post/list?limit=2`, {filter: {approved: 1}});
+        if(resbigPost.data.success) {
+           bigPost.value = resbigPost.data.data
+        }
+        console.log("listPost.value", listPost.value);
+
+        // post.value = response.data.data
+        // console.log('post', response.data)
       } catch (error) {
-        console.error(error);
+        console.error(error.response);
       }
-    }
+    };
 
     checkToken().then((result) => {
-      if(result){
-        console.log('result', result)
-          store.commit('setAuth', true)
-          store.commit('setRole', result.data.role)
-          store.commit('setName', result.data.name)
-        } 
-    })
+      if (result) {
+        console.log("result", result);
+        store.commit("setAuth", true);
+        store.commit("setRole", result.data.role);
+        store.commit("setName", result.data.name);
+        store.commit('setId', result.data._id)
+      }
+    });
 
-
-
-    fechPost()
-
-
-
+    fechPost();
 
     return {
-      post
-    }
+      post,
+      listPost,
+      bigPost
+    };
   },
 };
 </script>

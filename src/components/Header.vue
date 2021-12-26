@@ -28,7 +28,7 @@
               </form>
             </div>
             <div>
-              {{ this.$store.state.nameUser }}
+              <h3 v-if="this.$store.state.isAuth" style="color: white">{{ this.$store.state.nameUser }}</h3>
               <span v-if="!isAuth">
                 <router-link to="/login">
                   <button class="btn btn-success" style="margin-right: 10px">
@@ -40,10 +40,19 @@
                 </router-link>
               </span>
             
-              <a v-else @click="handleLogout">
-                Đăng xuất
-              </a>
-                 <router-link to="/admin/dashboard">Admin</router-link>
+              <span class="text-light" v-else @click="handleLogout">
+                <router-link class="text-light" to="">Đăng xuất /    </router-link>
+              </span>
+              <span v-if="this.$store.state.isAuth">
+                <router-link class="text-light" :to="`/update-user/${this.$store.state.id}`">Thông tin cá nhân</router-link>
+              </span>
+              <span v-if="this.$store.state.isAuth && [0,1,2].indexOf(this.$store.state.isRole) >= 0">
+                 <router-link class="text-light" to="/create-post"> / Tạo bài viết</router-link>
+              </span>
+              <span v-if="this.$store.state.isAuth && this.$store.state.isRole == 0 || this.$store.state.isRole == 1">
+                 <router-link class="text-light" to="/admin/dashboard"> / Admin</router-link>
+              </span>
+                
             </div>
           </div>
         </div>
@@ -90,7 +99,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
   props: ["slug"],
-  setup(props) {
+  setup(props, context) {
     const fixed = ref(false);
     const listCategory = ref([]);
     // const menu = ref([])
@@ -117,6 +126,8 @@ export default {
         params.value = router.params.slug;
         console.log("router.params.slug", router.params.slug);
       }, 100);
+      context.emit('handleActive', true)
+      console.log('props.slug', props.slug)
     };
 
     const handleLogout = () => {
@@ -124,18 +135,20 @@ export default {
       store.commit("setAuth", false);
       store.commit("setRole", Number);
       store.commit("setName", "");
+      store.commit("setId", "");
     };
 
     onMounted(() => {
-      window.document.onscroll = () => {
-        let nav = document.querySelector(".nav-bar-header");
-        if (window.scrollY > nav.offsetTop) {
-          fixed.value = true;
-        } else {
-          fixed.value = false;
-          console.log(fixed.value);
-        }
-      };
+      // console.log('props.slug', props.slug)
+      // window.document.onscroll = () => {
+      //   let nav = document.querySelector(".nav-bar-header");
+      //   if (window.scrollY > nav.offsetTop) {
+      //     fixed.value = true;
+      //   } else {
+      //     fixed.value = false;
+      //     console.log(fixed.value);
+      //   }
+      // };
     });
 
     // call function

@@ -16,8 +16,6 @@
           </option>
         </select>
       </div>
-      <!-- {{ contentSearch.search }} -->
-
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -47,16 +45,13 @@
               <td style="text-align: center">{{ item.permision }}</td>
               <td>{{ new Date(item.created_time).toLocaleString() }}</td>
               <td>
-                <button class="btn btn-success">Sửa</button>
-                <button class="btn btn-danger">Xoá</button>
-                <!-- <button class="btn btn-danger">Phê duyệt</button> -->
+                <span class="text-warning" @click="handleUpdate(item._id)">Xem</span> /
+                <span class="text-danger" @click="handleBan(item._id)">Chặn</span>
                
               </td>
             </tr>
           </tbody>
         </table>
-        <!-- <ModalUser /> -->
-
         <Pagination :count="count" :size="10" />
       </div>
     </div>
@@ -65,6 +60,7 @@
 <script>
 import { watch, ref } from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router"
 import Pagination from "../pagination.vue";
 // import ModalUser from "./ModalUser.vue";
 
@@ -83,7 +79,7 @@ export default {
     const search = ref("");
     const filter = ref("");
     const count = ref(0);
-    const visible = ref(false)
+    const router = useRouter()
     const selectOp = ref([
       {
         key: "",
@@ -115,11 +111,20 @@ export default {
       }
     );
 
-    const showModal = () => {
-      visible.value = true
+    const handleUpdate = (id) => {
+      router.push({path: `/update-user/${id}` })
     }
-    const handleCancel = () => {
-      visible.value = false
+    const handleBan = async (id) => {
+      try {
+        let response = await axios.post(`${process.env.VUE_APP_URL}/user/ban-user/${id}`,{flag: "ban"}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        console.log('resBan',response.data)
+      } catch (error) {
+        console.error(error.response)
+      }
     }
 
     const fetchListUser = async () => {
@@ -163,9 +168,8 @@ export default {
       handleChangeOption,
       count,
       loading,
-      showModal,
-      handleCancel,
-      visible
+      handleUpdate,
+      handleBan
     };
   },
 };

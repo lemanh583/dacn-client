@@ -1,6 +1,7 @@
 <template>
   <div class="table-content">
-    <h3>Tạo bài viết</h3>
+    <h3> bài viết</h3>
+    <h5>Tác giả: <span style="color: red">{{author.name}} / {{author.email}} </span> </h5>
     <form method="POST" enctype="multipart/form-data">
       <div class="form-group">
         <label for="exampleInputEmail1">Chọn thể loại bài viết</label>
@@ -39,6 +40,7 @@
           name="upload"
           @change="handleGetImg($event)"
         />
+        <img :src="srcImg" alt="bcxvbxcvb">
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Mô tả</label>
@@ -75,15 +77,20 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { notify } from "@kyvg/vue3-notification";
 import axios from "axios";
 import { ref } from "vue";
+import { useRoute } from "vue-router"
 
 export default {
   setup() {
     const editor = ClassicEditor;
+    const route = useRoute()
+    const id = ref("")
+    const author = ref({})
     const editorData = ref("");
     const title = ref("");
     const descriptions = ref("");
     const token = localStorage.getItem("token");
     const img = ref(null);
+    const srcImg = ref("")
     const selectCate = ref("");
     const listCategory = ref([]);
     const editorConfig = ref({
@@ -109,7 +116,7 @@ export default {
         data.append("content", editorData.value);
         data.append("category", selectCate.value);
         let response = await axios.post(
-          `${process.env.VUE_APP_URL}/post/create`,
+          `${process.env.VUE_APP_URL}/post/update/${id.value}`,
           data,
           {
             headers: {
@@ -119,17 +126,17 @@ export default {
           }
         );
         if (response.data.success) {
-          title.value = "";
-          descriptions.value = "";
-          editorData.value = "";
-          img.value = null
-          document.getElementById("inputGroupFile02").value = null;
+        //   title.value = "";
+        //   descriptions.value = "";
+        //   editorData.value = "";
+        //   img.value = null
+        //   document.getElementById("inputGroupFile02").value = null;
           notify({
             type: "success",
-            title: "Tạo bài viết thành công",
+            title: "Cập nhật bài viết thành công",
           });
         }
-        console.log("res-creat-post", response.data.data);
+        // console.log("res-creat-post", response.data.data);
       } catch (error) {
         console.error(error.response);
         notify({
@@ -157,6 +164,25 @@ export default {
 
     fetchCategory();
 
+    const fetchPost = async () => {
+        try {
+            let response = await axios.get(`${process.env.VUE_APP_URL}/post/get/${route.params.id}`);
+            if(response.data.success && response.data.data) {
+               editorData.value = response.data.data.content
+               title.value = response.data.data.title
+               descriptions.value = response.data.data.descriptions
+               selectCate.value = response.data.data.category._id
+               srcImg.value = response.data.data.image.src
+               id.value = response.data.data._id
+               author.value = response.data.data.author
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    fetchPost()
+    // console.log('route', )
+
     return {
       editor,
       editorData,
@@ -167,6 +193,8 @@ export default {
       handleGetImg,
       listCategory,
       selectCate,
+      srcImg,
+      author
     };
   },
 };
@@ -175,5 +203,12 @@ export default {
 .btn-submit {
   margin-top: 20px;
   margin-left: 93%;
+}
+img {
+    margin-top: 20px;
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
+    object-position: top;
 }
 </style>
