@@ -16,7 +16,7 @@
           @change="handleChangeSort"
           v-model="sortModel"
         >
-          <option value="0">Thời gian tạo mớt nhất</option>
+          <option value="0">Thời gian tạo mới nhất</option>
           <option value="1">Thời gian tạo cũ nhất</option>
           <option value="2">Lượt xem ít nhất</option>
           <option value="3">Lượt xem nhiều nhất</option>
@@ -57,19 +57,11 @@
               <td>{{ item.author.name }}</td>
               <td>{{ item.view }}</td>
               <td>{{ new Date(item.created_time).toLocaleString() }}</td>
-              <td v-if="item.approved == 0"><span @click="handleApproved(item._id)">Duyệt</span></td>
+              <td v-if="item.approved == 0"><span @click="handleApproved(item)">Duyệt</span></td>
               <td v-if="item.approved == 1"><span class="text-success">Done</span></td>
               <td>
-               
                   <span class="text-warning" @click="handleUpdate(item.slug)">Xem</span> /
-                  <span class="text-danger">Xoá</span>
-               
-               
-                <!-- <span v-if="accept == 1">
-                    <button class="btn btn-danger">Chấp nhận</button>
-                    <button class="btn btn-danger">Xem</button>
-                </span> -->
-              
+                  <span class="text-danger"  @click="handleDelete(item._id)">Xoá</span>
               </td>
             </tr>
            </tbody>
@@ -101,7 +93,7 @@ export default {
     const count = ref(0);
     const accept = ref('')
     const sortModel = ref('0')
-    const sort = ref({})
+    const sort = ref({created_time: -1})
     const router = useRouter()
     const loading = ref(true);
     const approved = ref("")
@@ -121,6 +113,29 @@ export default {
         }, 1000);
       }
     );
+
+    const handleDelete = async (id) => {
+      try {
+        const rs = await axios.delete(`${process.env.VUE_APP_URL}/post/delete/${id}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if(rs.data.success) {
+          notify({
+            type: "success",
+            title: "Xoá thành công",
+          });
+          fetchListPost()
+        }
+      } catch (error) {
+         console.error(error.response);
+          notify({
+            type: "error",
+            title: "Xoá thất bại",
+          });
+      }
+    }
 
     const handleUpdate = (id) => {
       router.push({path: `/update-post/${id}`})  
@@ -159,9 +174,9 @@ export default {
       }
     };
 
-    const handleApproved = async (id) => {
+    const handleApproved = async (item) => {
       try {
-        const list = await axios.post(`${process.env.VUE_APP_URL}/post/update/${id}`, {
+        const list = await axios.post(`${process.env.VUE_APP_URL}/post/update/${item._id}`, {
           approved: 1
         },{
           headers: {
@@ -176,7 +191,11 @@ export default {
         }
         fetchListPost()
       } catch (error) {
-        console.error(error);
+        console.error(error.response);
+          notify({
+            type: "error",
+            title: "Thất bại",
+          });
       }
     }
 
@@ -247,7 +266,8 @@ export default {
       count,
       changePaginator,
       skip,
-      handleUpdate
+      handleUpdate,
+      handleDelete
     }
   }
 }

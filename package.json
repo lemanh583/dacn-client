@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.0.1",
     "@ckeditor/ckeditor5-build-classic": "^31.1.0",
     "@ckeditor/ckeditor5-upload": "^31.1.0",
     "@ckeditor/ckeditor5-vue": "^2.0.1",
@@ -29,8 +30,11 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-import": "^1.13.3",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0"
+    "eslint-plugin-vue": "^7.0.0",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0"
   },
   "eslintConfig": {
     "root": true,

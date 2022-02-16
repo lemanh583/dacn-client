@@ -122,6 +122,8 @@ export default {
           localStorage.setItem('token', response.data.token)
           store.commit("setAuth", true);
           store.commit("setRole", response.data.data.role)
+          store.commit('setName', response.data.data.name)
+          store.commit('setId', response.data.data._id)
           router.push({path: "/"}) 
         }
       } catch (error) {

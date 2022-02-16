@@ -51,7 +51,12 @@ const routes = [
   {
     path: '/create-post',
     name: 'CreatePost',
-    component: () => import('../views/updatePost.vue'),
+    component: () => import('../components/CreatePost.vue'),
+  },
+  {
+    path: '/search/:slug',
+    name: "Search",
+    component: () => import('../views/Search.vue')
   },
   {
     path: '/404',

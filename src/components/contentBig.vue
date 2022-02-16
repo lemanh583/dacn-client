@@ -64,4 +64,11 @@ export default {
   font-size: 20px;
   font-weight: 700;
 }
+a {
+  color: black;
+  text-decoration: none;
+}
+a:hover {
+  color: blue;
+}
 </style>

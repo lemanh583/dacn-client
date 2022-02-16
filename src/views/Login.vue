@@ -87,6 +87,9 @@ export default {
           store.commit('setRole', result.data.role)
           store.commit('setName', result.data.name)
           store.commit('setId', result.data._id)
+          if(result.data.img) {
+            store.commit('setImg', result.data.img.src)
+          }
         } 
     } )
   

@@ -6,15 +6,15 @@
         id="accordionSidebar"
       >
         <!-- Sidebar - Brand -->
-        <a
+        <router-link
           class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
+          to="/"
         >
           <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
           </div>
           <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
-        </a>
+        </router-link>
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0" />
@@ -77,7 +77,7 @@
             <i class="fas fa-fw fa-folder"></i>
             <span>Tạo bài viết</span>
           </router-link>
-          <div
+          <!-- <div
             id="collapsePages"
             class="collapse"
             aria-labelledby="headingPages"
@@ -95,24 +95,24 @@
               <a class="collapse-item" href="404.html">404 Page</a>
               <a class="collapse-item" href="blank.html">Blank Page</a>
             </div>
-          </div>
+          </div> -->
         </li>
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-          <a class="nav-link" href="charts.html">
+          <router-link class="nav-link" to="/admin/create-user">
             <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a
+            <span>Tạo người dùng</span></router-link
           >
         </li>
 
         <!-- Nav Item - Tables -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="tables.html">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a
           >
-        </li>
+        </li> -->
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block" />
@@ -213,8 +213,7 @@
                 </div>
               </li>
 
-              <!-- Nav Item - Alerts -->
-              <li class="nav-item dropdown no-arrow mx-1">
+              <!-- <li class="nav-item dropdown no-arrow mx-1">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -225,10 +224,10 @@
                   aria-expanded="false"
                 >
                   <i class="fas fa-bell fa-fw"></i>
-                  <!-- Counter - Alerts -->
+                  
                   <span class="badge badge-danger badge-counter">3+</span>
                 </a>
-                <!-- Dropdown - Alerts -->
+                
                 <div
                   class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                   aria-labelledby="alertsDropdown"
@@ -276,10 +275,9 @@
                     >Show All Alerts</a
                   >
                 </div>
-              </li>
+              </li> -->
 
-              <!-- Nav Item - Messages -->
-              <li class="nav-item dropdown no-arrow mx-1">
+              <!-- <li class="nav-item dropdown no-arrow mx-1">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -290,10 +288,10 @@
                   aria-expanded="false"
                 >
                   <i class="fas fa-envelope fa-fw"></i>
-                  <!-- Counter - Messages -->
+                 
                   <span class="badge badge-danger badge-counter">7</span>
                 </a>
-                <!-- Dropdown - Messages -->
+                
                 <div
                   class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                   aria-labelledby="messagesDropdown"
@@ -376,13 +374,13 @@
                     >Read More Messages</a
                   >
                 </div>
-              </li>
+              </li> -->
 
               <div class="topbar-divider d-none d-sm-block"></div>
 
               <!-- Nav Item - User Information -->
               <li class="nav-item dropdown no-arrow">
-                <a
+                <div
                   class="nav-link dropdown-toggle"
                   href="#"
                   id="userDropdown"
@@ -390,15 +388,16 @@
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  @click="handleLogout"
                 >
                   <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    >Douglas McGee</span
+                    >Đăng xuất</span
                   >
-                  <img
+                  <!-- <img
                     class="img-profile rounded-circle"
                     src="img/undraw_profile.svg"
-                  />
-                </a>
+                  /> -->
+                </div>
                 <!-- Dropdown - User Information -->
                 <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -441,13 +440,26 @@
   </div>
 </template>
 <script>
-import {ref} from "vue"
+import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   setup() {
-    const search = ref("")
+    const search = ref("");
+    const router = useRouter();
+    const store = useStore();
+    const handleLogout = () => {
+      localStorage.setItem("token", "");
+      store.commit("setAuth", false);
+      store.commit("setRole", Number);
+      store.commit("setName", "");
+      store.commit("setId", "");
+      router.push({path: "/"})
+    };
     return {
-      search
-    }
+      search,
+      handleLogout
+    };
   },
-}
+};
 </script>

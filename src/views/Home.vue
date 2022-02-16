@@ -1,10 +1,11 @@
 <template>
   <div>
     <Header />
-    {{ this.$store.state.isAuth }}
+    <!-- {{ this.$store.state.isAuth }}
     {{ this.$store.state.isRole }}
     {{ this.$store.state.nameUser }}
     {{ this.$store.state.id }}
+    {{ this.$store.state.img }} -->
     <div class="container" style="">
       <div class="row">
         <div class="col-8">
@@ -12,30 +13,29 @@
         </div>
         <div class="col-4">
           <ContentBig :post="bigPost[1]" :flag="false" />
-          <Content :post="bigPost[1]" />
+          <Content :post="bigPost[2]" />
         </div>
       </div>
       <div class="row" style="">
         <div class="col-8" style="">
           <div v-for="(value, key) in listPost" :key="key">
             <div :class="['category', key != 'Thời sự' ? 'mar-50' : '']">
-              <h3>{{ key }}</h3> 
+              <h3>{{ key }}</h3>
             </div>
             <Content v-for="post in value" :key="post._id" :post="post" />
           </div>
-
         </div>
         <div class="col-4">
           <div class="category">
-            <h3>Thời sự</h3>
+            <h3>Được quan tâm</h3>
           </div>
           <!-- <ContentBig :post="post[0]" :flag="false" /> -->
-          <!-- <ContentSmall /> -->
+          <ContentSmall :posts="listViewPost" />
           <div class="category mar-50">
-            <h3>Thời sự</h3>
+            <h3>Tin mới nhất</h3>
           </div>
-          <!-- <ContentSmall /> -->
-          Đang được quan tâm Tin mới nhất Random tin
+          <ContentSmall :posts="listNewPost" />
+          <!-- Đang được quan tâm Tin mới nhất Random tin -->
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
 <script>
 import Content from "../components/Content.vue";
 import ContentBig from "../components/contentBig.vue";
-// import ContentSmall from "../components/contentSmall.vue";
+import ContentSmall from "../components/contentSmall.vue";
 import Header from "../components/Header.vue";
 import { checkToken } from "../module/index.js";
 import { useStore } from "vuex";
@@ -56,26 +56,65 @@ export default {
   components: {
     Content,
     ContentBig,
-    // ContentSmall,
+    ContentSmall,
     Header,
   },
   setup() {
     const post = ref([]);
     const store = useStore();
     const listPost = ref({});
-    const bigPost = ref([])
+    const bigPost = ref([]);
+    const listViewPost = ref([]);
+    const listNewPost = ref([]);
 
+    const fetchPostRight = async () => {
+      try {
+        let response = await axios.post(
+          `${process.env.VUE_APP_URL}/post/list?limit=6`,
+          {
+            sort: {
+              view: -1,
+            },
+            filter: {
+              approved: 1,
+            }
+          }
+        );
+        let rs = await axios.post(
+          `${process.env.VUE_APP_URL}/post/list?limit=6`,
+          {
+            sort: {
+              created_time: -1,
+            },
+            filter: {
+              approved: 1,
+            }
+          }
+        );
+        if (response.data.success && rs.data.success) {
+          listViewPost.value = response.data.data;
+          listNewPost.value = rs.data.data;
+        }
+        console.log("fetchPostRight", response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPostRight();
     const fechPost = async () => {
       try {
-        const list = await axios.get( `${process.env.VUE_APP_URL}/category/list`);
+        const list = await axios.get(
+          `${process.env.VUE_APP_URL}/category/list`
+        );
         if (list.data.success) {
           await Promise.all(
             list.data.data.map(async (cate) => {
-              let response = await axios.post(`${process.env.VUE_APP_URL}/post/list?limit=3`,
+              let response = await axios.post(
+                `${process.env.VUE_APP_URL}/post/list?limit=3`,
                 {
                   filter: {
                     category: cate._id,
-                    approved: 1
+                    approved: 1,
                   },
                 }
               );
@@ -86,9 +125,12 @@ export default {
           );
         }
 
-        const resbigPost = await axios.post(`${process.env.VUE_APP_URL}/post/list?limit=2`, {filter: {approved: 1}});
-        if(resbigPost.data.success) {
-           bigPost.value = resbigPost.data.data
+        const resbigPost = await axios.post(
+          `${process.env.VUE_APP_URL}/post/list?limit=3`,
+          { filter: { approved: 1 } }
+        );
+        if (resbigPost.data.success) {
+          bigPost.value = resbigPost.data.data;
         }
         console.log("listPost.value", listPost.value);
 
@@ -105,7 +147,11 @@ export default {
         store.commit("setAuth", true);
         store.commit("setRole", result.data.role);
         store.commit("setName", result.data.name);
-        store.commit('setId', result.data._id)
+        store.commit("setId", result.data._id);
+        console.log('rs', result)
+        if (result.data.img) {
+          store.commit("setImg", result.data.img.src);
+        }
       }
     });
 
@@ -114,7 +160,9 @@ export default {
     return {
       post,
       listPost,
-      bigPost
+      bigPost,
+      listViewPost,
+      listNewPost,
     };
   },
 };

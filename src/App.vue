@@ -4,6 +4,9 @@
     <router-link to="/about">About</router-link> |
     <router-link to="/login">Login</router-link> -->
     <!-- Home -->
+    <!-- <a-button type="primary">
+      Primary
+    </a-button> -->
     
   </div>
   <router-view/>

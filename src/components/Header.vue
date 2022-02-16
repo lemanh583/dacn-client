@@ -11,16 +11,18 @@
           </div>
           <div class="col-6 flx-end alg-center">
             <div class="form-search">
-              <form method="GET">
+              <form method="POST">
                 <div class="input-group">
                   <input
                     type="text"
                     class="input-search"
                     placeholder="Tìm kiếm"
+                    v-model="search"
                   />
                   <button
                     style="border: none; background-color: white"
                     type="submit"
+                    @click="handleSearchPost"
                   >
                     <i class="fas fa-search auto-margin"></i>
                   </button>
@@ -28,7 +30,40 @@
               </form>
             </div>
             <div>
-              <h3 v-if="this.$store.state.isAuth" style="color: white">{{ this.$store.state.nameUser }}</h3>
+              <div style="position: relative;">
+                <div
+                  v-if="this.$store.state.isAuth"
+                  class="button-name"
+                  @click="handleOpenDrowdown"
+                >
+                  <img style="width: 30px; height: 30px;border-radius: 50%;margin-right: 10px;object-fit: cover;" :src="this.$store.state.img" alt="">
+                  <strong>{{ this.$store.state.nameUser }}</strong> 
+                  <i
+                    v-if="openDropdown"
+                    class="fa-solid fa-arrow-down"
+                    style="font-size: 20px;margin-left: 10px"
+                  ></i>
+                  <i
+                    v-if="!openDropdown"
+                    class="fa-solid fa-arrow-up"
+                    style="font-size: 20px;margin-left: 10px;"
+                  ></i>
+                </div>
+                <div v-if="openDropdown" class="drowdown-custome">
+                  <router-link :to="`/update-user/${this.$store.state.id}`" >
+                    <p class="drop-link">Thông tin cá nhân</p> 
+                  </router-link>
+                  <router-link v-if="this.$store.state.isAuth && [0,1,2].indexOf(this.$store.state.isRole) >= 0" to="/create-post">
+                    <p class="drop-link">Tạo bài viết</p> 
+                  </router-link>
+                   <router-link v-if="this.$store.state.isAuth && this.$store.state.isRole == 0 || this.$store.state.isRole == 1" to="/admin/dashboard">
+                    <p class="drop-link">Trang admin</p> 
+                  </router-link>
+                  <router-link to="" @click="handleLogout">
+                    <p class="drop-link">Đăng xuất</p>
+                  </router-link>
+                </div>
+              </div>
               <span v-if="!isAuth">
                 <router-link to="/login">
                   <button class="btn btn-success" style="margin-right: 10px">
@@ -39,8 +74,8 @@
                   <button class="btn btn-success">Đăng ký</button>
                 </router-link>
               </span>
-            
-              <span class="text-light" v-else @click="handleLogout">
+
+              <!-- <span class="text-light" v-else @click="handleLogout">
                 <router-link class="text-light" to="">Đăng xuất /    </router-link>
               </span>
               <span v-if="this.$store.state.isAuth">
@@ -51,8 +86,7 @@
               </span>
               <span v-if="this.$store.state.isAuth && this.$store.state.isRole == 0 || this.$store.state.isRole == 1">
                  <router-link class="text-light" to="/admin/dashboard"> / Admin</router-link>
-              </span>
-                
+              </span> -->
             </div>
           </div>
         </div>
@@ -96,17 +130,20 @@
 import { onMounted, ref, computed } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 export default {
   props: ["slug"],
   setup(props, context) {
     const fixed = ref(false);
     const listCategory = ref([]);
     // const menu = ref([])
-    const router = useRoute();
-    const params = ref(router.params.slug);
+    const search = ref("")
+    const route = useRoute();
+    const router = useRouter();
+    const params = ref(route.params.slug);
     const store = useStore();
-    const isAuth = computed(()=> store.state.isAuth)
+    const isAuth = computed(() => store.state.isAuth);
+    const openDropdown = ref(false);
     const fetchCategory = async () => {
       try {
         const list = await axios.get(
@@ -123,11 +160,11 @@ export default {
 
     const handleActive = () => {
       setTimeout(() => {
-        params.value = router.params.slug;
-        console.log("router.params.slug", router.params.slug);
+        params.value = route.params.slug;
+        console.log("router.params.slug", route.params.slug);
       }, 100);
-      context.emit('handleActive', true)
-      console.log('props.slug', props.slug)
+      context.emit("handleActive", true);
+      console.log("props.slug", props.slug);
     };
 
     const handleLogout = () => {
@@ -136,7 +173,19 @@ export default {
       store.commit("setRole", Number);
       store.commit("setName", "");
       store.commit("setId", "");
+      openDropdown.value = !openDropdown.value
     };
+
+    const handleOpenDrowdown = () => {
+      openDropdown.value = !openDropdown.value;
+    };
+
+    const handleSearchPost = async (e) => {
+      e.preventDefault()
+      if(!search.value) return 
+      router.push({path: `/search/${search.value}`})
+      console.log('searc', search.value)
+    }
 
     onMounted(() => {
       // console.log('props.slug', props.slug)
@@ -161,6 +210,10 @@ export default {
       handleActive,
       params,
       handleLogout,
+      handleOpenDrowdown,
+      search,
+      handleSearchPost,
+      openDropdown,
       isAuth,
       props,
     };
@@ -169,6 +222,32 @@ export default {
 </script>
 
 <style scoped>
+.drop-link {
+  padding: 5px 20px;
+}
+.drop-link:hover {
+  background-color: aqua;
+}
+.button-name {
+  color: white;
+  font-size: 20px;
+  /* background-color: blue; */
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+}
+.drowdown-custome {
+  max-width: 220px;
+  width: max-content;
+  /* height: 100px; */
+  padding: 10px 10px;
+  background-color: rgb(240, 231, 231);
+  border-radius: 10px;
+  position: absolute;
+  text-align: center;
+  z-index: 9;
+}
 .fixed {
   position: fixed;
   top: 0;

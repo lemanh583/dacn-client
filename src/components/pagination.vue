@@ -27,11 +27,14 @@ export default {
     setup(props, context) {
         const page = ref(0)
         watch(() => props.count ,(cur) => {
+          console.log('cur', cur)
+          console.log('prop', props.count)
           if(cur % props.size == 0) {
              page.value = Math.floor (cur / props.size)
           }
           else {
             page.value = Math.floor(cur / props.size) + 1
+            console.log('pagefds', page.value)
           }
         })
         console.log('page', page.value)

@@ -8,7 +8,8 @@ const store = new Vuex.Store({
     isAuth: false,
     isRole: Number,
     nameUser: "",
-    id: ""
+    id: "",
+    img: "http://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png"
   },
   mutations: {
     setAuth(state, value) {
@@ -22,6 +23,9 @@ const store = new Vuex.Store({
     },
     setId(state, value) {
       state.id = value
+    },
+    setImg(state, value) {
+      state.img = value
     }
   }
 })

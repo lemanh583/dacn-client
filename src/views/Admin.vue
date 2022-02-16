@@ -9,6 +9,10 @@
         
         <CreatePost  v-if="url == '/admin/create-post'"/>
 
+        <Dashboard  v-if="url == '/admin/dashboard'"/>
+
+        <CreateUser  v-if="url == '/admin/create-user'"/>
+
       </template>
     </AdminLayout>
   </div>
@@ -18,6 +22,8 @@ import AdminLayout from "../layout/AdminLayout.vue";
 import UserContent from "../components/admin/User.vue";
 import PostContent from "../components/admin/Post.vue";
 import CreatePost from "../components/CreatePost.vue";
+import Dashboard from "../components/admin/Dashboard.vue";
+import CreateUser from "../components/admin/CreateUser.vue"
 import { useStore } from "vuex";
 import { checkToken } from "../module/index.js";
 import { useRoute } from "vue-router";
@@ -27,7 +33,9 @@ export default {
     AdminLayout,
     UserContent,
     PostContent,
-    CreatePost
+    CreatePost,
+    Dashboard,
+    CreateUser
   },
   setup() {
     const route = useRoute();
