@@ -39,6 +39,7 @@
         </div>
       </div>
     </div>
+    <Footer />
     <!-- </LayoutPage> -->
   </div>
 </template>
@@ -51,6 +52,7 @@ import { checkToken } from "../module/index.js";
 import { useStore } from "vuex";
 import { ref } from "vue";
 import axios from "axios";
+import Footer from "../components/Footer.vue"
 
 export default {
   components: {
@@ -58,6 +60,7 @@ export default {
     ContentBig,
     ContentSmall,
     Header,
+    Footer
   },
   setup() {
     const post = ref([]);
