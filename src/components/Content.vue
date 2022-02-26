@@ -1,27 +1,31 @@
 <template>
   <div>
-    <div class="row block-content">
+    <div v-if="post" class="row block-content">
       <div class="col-4">
-        <router-link :to="`/${post.slug}`"> 
-        <img
-          class="image-content"
-          :src="post.image.src"
-          alt=""
-        />
+        <router-link :to="`/${post.slug}`">
+          <img
+            class="image-content"
+            :src="
+              post?.image
+                ? post.image.src
+                : 'https://1.bp.blogspot.com/-Al0uKuyGnYU/V0gJX5ULmGI/AAAAAAAADHw/Mqe3WxnvBqEzHuq_E_M4yzuhid_PoxnBgCLcB/s1600/img.gif'
+            "
+            alt=""
+          />
         </router-link>
       </div>
-      <div class="col-8 ">
+      <div class="col-8">
         <div class="content">
-          <router-link :to="`/${post.slug}`"> 
+          <router-link :to="`/${post?.slug}`">
             <h3 class="title">
-              {{post.title}}
+              {{ post?.title }}
             </h3>
           </router-link>
           <p class="descriptions">
-             {{post.descriptions}}
+            {{ flag ? post?.descriptions.slice(0, 200) + "..." : "" }}
           </p>
         </div>
-      </div> 
+      </div>
     </div>
     <div class="row">
       <div class="col-12">
@@ -33,13 +37,19 @@
 
 <script>
 export default {
-  props: ["post"],
+  props: {
+    post: Object,
+    flag: {
+      type: Boolean,
+      default: true,
+    },
+  },
   setup(props) {
     return {
-        props
-    }
+      props,
+    };
   },
-}
+};
 </script>
 
 <style scoped>

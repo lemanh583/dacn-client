@@ -10,11 +10,20 @@
       </h1>
       <div class="row">
         <div class="col-8">
+          <div
+            v-if="false"
+            class="spinner-border"
+            style="margin-left: 45%"
+            role="status"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+
           <div v-if="activePost" class="list-post">
             <Content v-for="p in posts" :key="p._id" :post="p" />
           </div>
 
-          <div v-else class="content">
+          <div  v-if="!activePost" class="content">
             <div class="header-content">
               <h6 style="color: #076db6">{{ post.category.name }}</h6>
               <h6 style="color: #757575">
@@ -137,6 +146,7 @@ export default {
     const limitPost = ref(10);
     const skipPost = ref(0);
     const category = ref({});
+    const loading = ref(true);
     //  let isRole = computed(() => store.state.isRole);
     // const getParam = () => {
     //   params.value = router.params.slug
@@ -145,7 +155,7 @@ export default {
 
     const handleActive = () => {
       categoryActive.value = "";
-      console.log("categoryActive", categoryActive.value);
+      // console.log("categoryActive", categoryActive.value);
     };
 
     const fetchPostCate = async () => {
@@ -167,12 +177,11 @@ export default {
           );
 
           if (resPosts.data.success) {
+            loading.value = false
             posts.value = resPosts.data.data;
             activePost.value = true;
             count.value = resPosts.data.count;
-            console.log("count", count.value);
           }
-          // console.log('posts', resPosts)
         } else {
           await fetchPost();
         }
@@ -195,7 +204,7 @@ export default {
           routerPush.push({ path: "/404" });
         }
 
-        console.log("post", post.value);
+        // console.log("post", post.value);
       } catch (error) {
         console.error(error.response);
         // routerPush.push({path: "/404"})
@@ -255,7 +264,7 @@ export default {
         if (response.data.success) {
           listCmt.value = response.data.data;
           countCmt.value = response.data.count;
-          console.log("listcmt", response.data.data);
+          // console.log("listcmt", response.data.data);
         }
       } catch (error) {
         console.error(error.response);
@@ -285,8 +294,8 @@ export default {
       }
     });
     // fetchPost()
-    console.log("route", router.params.slug);
-    console.log("test back");
+    // console.log("route", router.params.slug);
+    // console.log("test back");
     return {
       post,
       categoryActive,
@@ -301,6 +310,7 @@ export default {
       changePaginatorCmt,
       category,
       changePaginatorPost,
+      loading,
     };
   },
 };
@@ -333,5 +343,14 @@ export default {
   border-radius: 10px;
   padding-top: 13px;
   padding-left: 20px;
+}
+
+</style>
+<style scoped>
+p {
+  color: black;
+}
+h1 {
+  color: black;
 }
 </style>

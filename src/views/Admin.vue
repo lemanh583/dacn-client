@@ -6,12 +6,19 @@
         <UserContent v-if="url == '/admin/users'" :contentSearch="search"/>
 
         <PostContent v-if="url == '/admin/posts'" :contentSearch="search"/>
+
+        <CategoryContent v-if="url == '/admin/categories' && this.$store.state.isRole == 0" />
+        <p v-if="url == '/admin/categories' && this.$store.state.isRole != 0"> Bạn không có quyền truy cập vào tính năng này! </p>
         
         <CreatePost  v-if="url == '/admin/create-post'"/>
 
         <Dashboard  v-if="url == '/admin/dashboard'"/>
 
         <CreateUser  v-if="url == '/admin/create-user'"/>
+
+        <Images  v-if="url == '/admin/images'"/>
+
+        <Comments  v-if="url == '/admin/comments'"/>
 
       </template>
     </AdminLayout>
@@ -23,7 +30,10 @@ import UserContent from "../components/admin/User.vue";
 import PostContent from "../components/admin/Post.vue";
 import CreatePost from "../components/CreatePost.vue";
 import Dashboard from "../components/admin/Dashboard.vue";
-import CreateUser from "../components/admin/CreateUser.vue"
+import CreateUser from "../components/admin/CreateUser.vue";
+import CategoryContent from "../components/admin/Categories.vue";
+import Images from "../components/admin/Images.vue";
+import Comments from "../components/admin/Comments.vue";
 import { useStore } from "vuex";
 import { checkToken } from "../module/index.js";
 import { useRoute } from "vue-router";
@@ -35,7 +45,10 @@ export default {
     PostContent,
     CreatePost,
     Dashboard,
-    CreateUser
+    CreateUser,
+    CategoryContent,
+    Images,
+    Comments
   },
   setup() {
     const route = useRoute();

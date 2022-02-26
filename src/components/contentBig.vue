@@ -1,18 +1,25 @@
 <template>
-    <div>
-        <div :class="['row', 'content-big', flag ? 'hei-500' : '']">
-            <div class="col-12">
-              <div class="image">
-                 <img :src="post.image.src" alt="">
-              </div>
-              <div class="title">
-                <router-link :to="`/${post.slug}`"> 
-                  <h3>{{post.title}}</h3>
-                </router-link>
-              </div>
-            </div>
+  <div v-if="post">
+    <div :class="['row', 'content-big', flag ? 'hei-500' : '']">
+      <div class="col-12">
+        <div class="image">
+          <img
+            :src="
+              post?.image
+                ? post.image.src
+                : 'https://1.bp.blogspot.com/-Al0uKuyGnYU/V0gJX5ULmGI/AAAAAAAADHw/Mqe3WxnvBqEzHuq_E_M4yzuhid_PoxnBgCLcB/s1600/img.gif'
+            "
+            alt=""
+          />
         </div>
+        <div class="title">
+          <router-link :to="`/${post?.slug}`">
+            <h3>{{  post?.title }}</h3>
+          </router-link>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 // import {toRefs} from "vue"
@@ -37,9 +44,9 @@ export default {
     return {
       props,
       // refPost
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>

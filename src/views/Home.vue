@@ -13,7 +13,7 @@
         </div>
         <div class="col-4">
           <ContentBig :post="bigPost[1]" :flag="false" />
-          <Content :post="bigPost[2]" />
+          <Content :post="bigPost[2]" :flag="false" />
         </div>
       </div>
       <div class="row" style="">
@@ -52,7 +52,7 @@ import { checkToken } from "../module/index.js";
 import { useStore } from "vuex";
 import { ref } from "vue";
 import axios from "axios";
-import Footer from "../components/Footer.vue"
+import Footer from "../components/Footer.vue";
 
 export default {
   components: {
@@ -60,7 +60,7 @@ export default {
     ContentBig,
     ContentSmall,
     Header,
-    Footer
+    Footer,
   },
   setup() {
     const post = ref([]);
@@ -80,7 +80,7 @@ export default {
             },
             filter: {
               approved: 1,
-            }
+            },
           }
         );
         let rs = await axios.post(
@@ -91,7 +91,7 @@ export default {
             },
             filter: {
               approved: 1,
-            }
+            },
           }
         );
         if (response.data.success && rs.data.success) {
@@ -127,7 +127,13 @@ export default {
             })
           );
         }
+      } catch (error) {
+        console.error(error.response);
+      }
+    };
 
+    const fetchBigPost = async () => {
+      try {
         const resbigPost = await axios.post(
           `${process.env.VUE_APP_URL}/post/list?limit=3`,
           { filter: { approved: 1 } }
@@ -135,12 +141,8 @@ export default {
         if (resbigPost.data.success) {
           bigPost.value = resbigPost.data.data;
         }
-        console.log("listPost.value", listPost.value);
-
-        // post.value = response.data.data
-        // console.log('post', response.data)
       } catch (error) {
-        console.error(error.response);
+        console.error(error)
       }
     };
 
@@ -151,13 +153,13 @@ export default {
         store.commit("setRole", result.data.role);
         store.commit("setName", result.data.name);
         store.commit("setId", result.data._id);
-        console.log('rs', result)
+        console.log("rs", result);
         if (result.data.img) {
           store.commit("setImg", result.data.img.src);
         }
       }
     });
-
+    fetchBigPost();
     fechPost();
 
     return {

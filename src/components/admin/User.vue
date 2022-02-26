@@ -36,7 +36,7 @@
               <span class="sr-only">Loading...</span>
             </div>
             <tr v-else v-for="(item, index) in listUser" :key="index">
-              <th scope="row">{{ index + 1 }}</th>
+              <th scope="row">{{ skip + index + 1 }}</th>
               <td><img src="dsvsdv" alt="" /></td>
               <td>{{ item.username }}</td>
               <td>{{ item.name }}</td>
@@ -68,7 +68,7 @@
             </tr>
           </tbody>
         </table>
-        <Pagination :count="count" :size="10" />
+        <Pagination :count="count" :size="10"   @changePaginator="changePaginator" />
       </div>
       <notifications />
     </div>
@@ -91,6 +91,8 @@ export default {
     // watchEffect(() => {
     //   console.log(props.contentSearch.search)
     // })
+    const skip = ref(0)
+    const limit = ref(10)
     const listUser = ref([]);
     const token = localStorage.getItem("token");
     const search = ref("");
@@ -190,7 +192,7 @@ export default {
     const fetchListUser = async () => {
       try {
         const response = await axios.post(
-          `${process.env.VUE_APP_URL}/user/list`,
+          `${process.env.VUE_APP_URL}/user/list?skip=${skip.value}&limit=${limit.value}`,
           {
             search: search.value,
             filter: filter.value,
@@ -212,6 +214,13 @@ export default {
       }
     };
 
+    const changePaginator = (pageNumber) => {
+      skip.value = Number(pageNumber - 1) * 10;
+      limit.value = 10;
+      //   console.log('skip', skip.value)
+      fetchListUser();
+    };
+
     const handleChangeOption = () => {
       loading.value = true;
       fetchListUser();
@@ -231,6 +240,8 @@ export default {
       handleUpdate,
       handleBan,
       handleUnBan,
+      changePaginator,
+      skip
     };
   },
 };

@@ -58,6 +58,22 @@
           </router-link>
         </li>
 
+        <li class="nav-item">
+          <router-link class="nav-link" to="/admin/images">
+            <!-- <i class="fas fa-fw fa-wrench"></i> -->
+            <i class="fas fa-fw fa-folder"></i>
+            <span style="margin-left: 10px">Danh sách hình ảnh</span>
+          </router-link>
+        </li>
+
+         <li class="nav-item">
+          <router-link class="nav-link" to="/admin/comments">
+            <!-- <i class="fas fa-fw fa-wrench"></i> -->
+            <i class="fas fa-fw fa-folder"></i>
+            <span style="margin-left: 10px">Danh sách bình luận</span>
+          </router-link>
+        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider" />
 

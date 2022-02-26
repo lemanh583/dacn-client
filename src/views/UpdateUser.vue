@@ -346,6 +346,7 @@ export default {
           }
         );
         if (response.data.success) {
+          fetchUser();
           notify({
             type: "success",
             title: "Sửa thành thành công",
