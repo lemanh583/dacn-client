@@ -109,23 +109,40 @@ export default {
         const list = await axios.get(
           `${process.env.VUE_APP_URL}/category/list`
         );
+        console.log("listpost", list.data.data);
         if (list.data.success) {
-          await Promise.all(
-            list.data.data.map(async (cate) => {
-              let response = await axios.post(
-                `${process.env.VUE_APP_URL}/post/list?limit=3`,
-                {
-                  filter: {
-                    category: cate._id,
-                    approved: 1,
-                  },
-                }
-              );
-              if (response.data.success) {
-                listPost.value[cate.name] = response.data.data;
+          for (let i = 0; i < list.data.data.length; i++) {
+            let response = await axios.post(
+              `${process.env.VUE_APP_URL}/post/list?limit=3`,
+              {
+                filter: {
+                  category: list.data.data[i]._id,
+                  approved: 1,
+                },
               }
-            })
-          );
+            );
+            if (response.data.success) {
+              listPost.value[list.data.data[i].name] = response.data.data;
+            }
+          }
+
+          // await Promise.all(
+          //   list.data.data.map(async (cate) => {
+          //     let response = await axios.post(
+          //       `${process.env.VUE_APP_URL}/post/list?limit=3`,
+          //       {
+          //         filter: {
+          //           category: cate._id,
+          //           approved: 1,
+          //         },
+          //       }
+          //     );
+          //     if (response.data.success) {
+          //       listPost.value[cate.name] = response.data.data;
+          //     }
+          //   })
+          // );
+          console.log("listpost", listPost.value);
         }
       } catch (error) {
         console.error(error.response);
@@ -136,13 +153,19 @@ export default {
       try {
         const resbigPost = await axios.post(
           `${process.env.VUE_APP_URL}/post/list?limit=3`,
-          { filter: { approved: 1 } }
+          {
+            filter: { approved: 1 },
+            sort: {
+              created_time: -1,
+            },
+          }
         );
         if (resbigPost.data.success) {
+          console.log('bigposst', resbigPost.data.data)
           bigPost.value = resbigPost.data.data;
         }
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     };
 
