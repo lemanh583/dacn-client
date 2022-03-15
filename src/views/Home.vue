@@ -41,6 +41,19 @@
     </div>
     <Footer />
     <!-- </LayoutPage> -->
+    <!--Start of Webchat Script-->
+    <div id="gwc-app"></div>
+    <script type="text/javascript">
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://webchat-dev-api.gopage.me/v1/embed/5a667195-b840-4474-b20d-3f29c62f5280';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Webchat Script-->
   </div>
 </template>
 <script>
