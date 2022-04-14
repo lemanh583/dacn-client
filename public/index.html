@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   </head>
   <body>
     <noscript>
@@ -14,8 +14,8 @@
     </noscript>
     <div id="app"></div>
     <!--Start of Webchat Script-->
-   <!--Start of Webchat Script-->
-   <!-- <div id="gwc-app"></div>
+    <!--Start of Webchat Script-->
+    <!-- <div id="gwc-app"></div>
    <script type="text/javascript">
        (function () {
            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
@@ -26,14 +26,14 @@
            s0.parentNode.insertBefore(s1, s0);
        })();
    </script> -->
-   <!--End of Webchat Script-->
+    <!--End of Webchat Script-->
     <!--End of Webchat Script-->
 
-   <!-- Messenger Chat plugin Code -->
-   <!-- <div id="fb-root"></div> -->
+    <!-- Messenger Chat plugin Code -->
+    <!-- <div id="fb-root"></div> -->
 
-   <!-- Your Chat plugin code -->
-   <!-- <div id="fb-customer-chat" class="fb-customerchat">
+    <!-- Your Chat plugin code -->
+    <!-- <div id="fb-customer-chat" class="fb-customerchat">
    </div>
 
    <script>
@@ -42,8 +42,8 @@
      chatbox.setAttribute("attribution", "biz_inbox");
    </script> -->
 
-   <!-- Your SDK code -->
-   <!-- <script>
+    <!-- Your SDK code -->
+    <!-- <script>
      window.fbAsyncInit = function() {
        FB.init({
          xfbml            : true,
@@ -59,14 +59,13 @@
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
    </script> -->
-   
-   <!-- <div id="fb-root"></div>
+
+    <!-- <div id="fb-root"></div>
    <div id="fb-customer-chat" class="fb-customerchat">     </div>
    <script>       var chatbox = document.getElementById('fb-customer-chat');       chatbox.setAttribute("page_id", "100314329198851");       chatbox.setAttribute("attribution", "biz_inbox");     </script>
    <script>       window.fbAsyncInit = function() {         FB.init({           xfbml            : true,           version          : 'v13.0'         });       };        (function(d, s, id) {         var js, fjs = d.getElementsByTagName(s)[0];         if (d.getElementById(id)) return;         js = d.createElement(s); js.id = id;         js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';         fjs.parentNode.insertBefore(js, fjs);       }(document, 'script', 'facebook-jssdk'));     </script> -->
 
-
-<div id="gwc-app"></div>
+    <!-- <div id="gwc-app"></div>
 <script type="text/javascript">
     (function () {
         var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
@@ -76,9 +75,23 @@
         s1.setAttribute('crossorigin', '*');
         s0.parentNode.insertBefore(s1, s0);
     })();
-</script>
+</script> -->
 
-   
+    <!--Start of Webchat Script-->
+    <div id="gwc-app"></div>
+    <script type="text/javascript">
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://localhost:3301/v1/embed/16c3b5c2-ac00-4660-9852-785a8b19367b";
+        s1.charset = "UTF-8";
+        s1.setAttribute("crossorigin", "*");
+        s0.parentNode.insertBefore(s1, s0);
+      })();
+    </script>
+    <!--End of Webchat Script-->
+
     <!-- <script type="text/javascript" src="../src/module/sb-admin-2.min.js"></script> -->
     <!-- built files will be auto injected -->
     <!-- <script type="text/javascript" src="../src/module/sb-admin-2.js"></script> -->
